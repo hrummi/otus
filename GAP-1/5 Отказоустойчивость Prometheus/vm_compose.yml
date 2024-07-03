@@ -1,0 +1,11 @@
+services:
+  victoria-metrics:
+    image: victoriametrics/victoria-metrics:latest
+    container_name: "victoria-metrics"
+    ports:
+      - "8428:8428"
+    volumes:
+      - "./victoria-metrics-data:/victoria-metrics-data"
+    command:
+      - "--retentionPeriod=2w"
+    restart: unless-stopped
