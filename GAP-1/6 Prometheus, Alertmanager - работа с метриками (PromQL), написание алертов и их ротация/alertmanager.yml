@@ -1,0 +1,47 @@
+global:
+
+route:
+  receiver: 'common'
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 3h
+
+  routes:
+  - receiver: 'for-critical'
+    continue: true
+    matchers:
+     - severity="critical"
+#  - receiver: for-warning
+#    matchers:
+#     - severity="warning"
+
+
+inhibit_rules:
+- source_matchers:
+    - severity="critical"
+  target_matchers:
+    - severity="warning"
+  equal: ['alertname','instance']
+
+
+receivers:
+  - name: 'common'
+    telegram_configs:
+    - chat_id: <id1>
+      bot_token: 6438601202:AAEc2qCJYX6oIsAzCJJSr-eF7AxG2HdboCA
+      message: "🚨 Alertmanager 🚨\n--\n🔺 Alertname: {{ .GroupLabels.alertname}}\n🔺 Severity: {{ .CommonLabels.severity }}\n📌 {{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+    
+    
+  - name: 'for-critical'
+    telegram_configs:
+    - chat_id: <id2>
+      bot_token: 6438601202:AAEc2qCJYX6oIsAzCJJSr-eF7AxG2HdboCA
+      message: "🚨 Alertmanager 🚨\n--\n🔺 Alertname: {{ .GroupLabels.alertname}}\n🔺 Severity: {{ .CommonLabels.severity }}\n📌 {{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+
+
+#  - name: 'for-warning'
+#    telegram_configs:
+#    - chat_id: <id3>
+#      bot_token: 6438601202:AAEc2qCJYX6oIsAzCJJSr-eF7AxG2HdboCA
+#      message: "🚨 Alertmanager 🚨\n--\n🔺 Alertname: {{ .GroupLabels.alertname}}\n🔺 Severity: {{ .CommonLabels.severity }}\n📌 {{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
