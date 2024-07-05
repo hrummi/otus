@@ -29,19 +29,19 @@ receivers:
   - name: 'common'
     telegram_configs:
     - chat_id: <id1>
-      bot_token: 6438601202:AAEc2qCJYX6oIsAzCJJSr-eF7AxG2HdboCA
+      bot_token: <token>
       message: "🚨 Alertmanager 🚨\n--\n🔺 Alertname: {{ .GroupLabels.alertname}}\n🔺 Severity: {{ .CommonLabels.severity }}\n📌 {{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
     
     
   - name: 'for-critical'
     telegram_configs:
     - chat_id: <id2>
-      bot_token: 6438601202:AAEc2qCJYX6oIsAzCJJSr-eF7AxG2HdboCA
+      bot_token: <token>
       message: "🚨 Alertmanager 🚨\n--\n🔺 Alertname: {{ .GroupLabels.alertname}}\n🔺 Severity: {{ .CommonLabels.severity }}\n📌 {{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
 
 
 #  - name: 'for-warning'
 #    telegram_configs:
 #    - chat_id: <id3>
-#      bot_token: 6438601202:AAEc2qCJYX6oIsAzCJJSr-eF7AxG2HdboCA
+#      bot_token: <token>
 #      message: "🚨 Alertmanager 🚨\n--\n🔺 Alertname: {{ .GroupLabels.alertname}}\n🔺 Severity: {{ .CommonLabels.severity }}\n📌 {{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
