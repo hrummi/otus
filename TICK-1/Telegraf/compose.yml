@@ -1,0 +1,20 @@
+version: '3'
+services:
+  telegraf:
+    image: telegraf:latest
+    environment:
+      INFLUX_TOKEN: 'pTnchVNITMy-wqhRZFTGzQ1cJYSSqv_QlM7pLrAZ690CAKcXgOo3yuyGBQwjWGx1Xv2WE2rWrQ4g4iYBD8MlBg=='
+      HOST_PROC: '/hostfs/proc'
+      HOST_MOUNT_PREFIX: '/hostfs'
+    configs:
+    - source: telegraf-conf
+      target: /etc/telegraf/telegraf.conf
+    ports:
+    - 8186:8186
+    volumes:
+    - /home/nk/composes/wp/certs:/opt/certs
+    - /:/hostfs:ro
+    command: ["telegraf", "--config", "http://10.0.2.70:8086/api/v2/telegrafs/0d71fc8f9b925000"]
+configs:
+  telegraf-conf:
+    file: ./telegraf.conf

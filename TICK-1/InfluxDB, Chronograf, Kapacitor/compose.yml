@@ -1,0 +1,22 @@
+version: '3'
+services:
+  influxdb:
+    image: influxdb:2
+    ports:
+    - 8086:8086
+    environment:
+      DOCKER_INFLUXDB_INIT_USERNAME: "admin"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "password"
+      DOCKER_INFLUXDB_INIT_TOKEN: "131K6dhqYtjTc3uWELEjpFOvw7PTQp31RWGraZHBVda5fgwxjbUDiERBaqS_-FXI9Oa1aH7OcT0Au81JvA6NTA=="
+      DOCKER_INFLUXDB_INIT_ORG: "otus"
+      DOCKER_INFLUXDB_INIT_BUCKET: "otus"
+  chronograf:
+    image: chronograf:latest
+    ports:
+    - 8888:8888
+  kapacitor:
+    image: kapacitor:latest
+    ports:
+    - 9092:9092
+    volumes:
+    - ./kapacitor.conf:/etc/kapacitor/kapacitor.conf
