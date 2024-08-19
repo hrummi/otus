@@ -1,0 +1,26 @@
+input {
+  beats {
+    port => 5044
+
+  }
+}
+
+
+filter {
+  if [fields][type] == "nginx-access" {
+    grok {
+      match => { "message" => "%{IPORHOST:remote_ip} - - \[%{HTTPDATE:time}\] \"%{WORD:method} %{DATA:content_path} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code} %{NUMBER:body_sent} \"%{URI:url}\" \"%{DATA:agent}\"" }
+      remove_field => "message"
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["https://10.0.2.72:9200"]
+    ssl_verification_mode => "none"
+    user => "elastic"
+    password => "password"
+    index => logstash
+  }
+}
