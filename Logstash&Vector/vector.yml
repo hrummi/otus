@@ -1,21 +1,4 @@
-#                                    __   __  __
-#                                    \ \ / / / /
-#                                     \ V / / /
-#                                      \_/  \/
-#
-#                                    V E C T O R
-#                                   Configuration
-#
-# ------------------------------------------------------------------------------
-# Website: https://vector.dev
-# Docs: https://vector.dev/docs
-# Chat: https://chat.vector.dev
-# ------------------------------------------------------------------------------
 
-# Change this to use a non-default directory for Vector data storage:
-# data_dir: "/var/lib/vector"
-
-# Random Syslog-formatted logs
 sources:
   nginx-access:
     type: "file"
@@ -32,65 +15,15 @@ sources:
     include: ["/var/log/mysql/*"]
     ignore_older_secs: 86400
 
-#  php-fpm:
-#    type: "file"
-#    include: ["/var/log/php*.log"]
-#    ignore_older_secs: 86400
-
-
-#  otus_logs:
-#    type: "file"
-#    include: ["/var/log/php*.log","/var/log/nginx/*.log","/var/log/mysql/*.log"]
-#    ignore_older_secs: 86400 # 1 day
-#  dummy_logs:
-#    type: "demo_logs"
-#    format: "syslog"
-#    interval: 1
-
-# Parse Syslog logs
-# See the Vector Remap Language reference for more info: https://vrl.dev
-
-
-
 
 transforms:
   nginx_access_parser:
     type: "remap"
     inputs: ["nginx-access"]
-#    source: |
-#      .remote_addr, .remote_user, .time_local, .request, .status, .body_bytes_sent, .http_referer, .http_user_agent = parse_regex!(.message, r'^(?P<remote_addr>[^ ]*) - (?P<remote_user>[^ ]*) \[(?P<time_local>[^\]]*)\] "(?P<request>[^"]*)" (?P<status>[^ ]*) (?P<body_bytes_sent>[^ ]*) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"$')
-#      .timestamp = to_unix_timestamp!(parse_date!(.time_local, "%d/%b/%Y:%H:%M:%S %z"))
-#      del(.message)
-
-
-
-
-#  nginx:
-#    type: "remap"
-#    inputs: ["nginx-access"]
     source: |
       .nginx = parse_nginx_log!(string!(.message),"combined")
       .original_event = del(.message)
-#      .remote_ip = parse_regex!(.message, r'(?P<remote_ip>.*)')
 
-#      .nginx = parse_nginx_log!(string!(.message),"combined")
-
-#      remote_ip = parse_regex!(string!(.message), r'^(\S+)')
-#      rrr = parse_regex_all!(.message, r'(?P<number>\w+) group', numeric_groups: true)
-
- #     . = parse_regex!(.message, r'.*')
-#      .nginx.request = parse_regex!(.message, r'"(.*?)"')
-#      .nginx.status_code = parse_regex!(.message, r'\d{3}')
-#      .nginx.size = parse_regex!(.message, r'\d+')
-#      del(.message)
-
-#  parse_logs:
-#    type: "remap"
-#    inputs: ["mysql","nginx-error"]
-#    source: |
-#      . = parse_syslog!(string!(.message))
-
-# Print parsed logs to stdout
 sinks:
   elastic:
     inputs: ["nginx_access_parser","nginx-error","mysql"]
@@ -104,20 +37,3 @@ sinks:
       user: "elastic"
     tls:
       verify_certificate: false
-#  print:
-#    type: "console"
-#    inputs: ["nginx-access"]
-#    encoding:
-#      codec: "json"
-#      json:
-#        pretty: true
-
-
-
-
-# Vector's GraphQL API (disabled by default)
-# Uncomment to try it out with the `vector top` command or
-# in your browser at http://localhost:8686
-# api:
-#   enabled: true
-#   address: "127.0.0.1:8686"
