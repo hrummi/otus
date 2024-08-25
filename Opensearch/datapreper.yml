@@ -1,0 +1,15 @@
+og-pipeline:
+  source:
+    http:
+      ssl: false
+  processor:
+    - grok:
+        match:
+          log: [ '%{IPORHOST:remote_ip} - - \[%{HTTPDATE:time}\] \"%{WORD:method} %{DATA:content_path} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code} %{NUMBER:body_sent} \"%{URI:url}\" \"%{DATA:agent}\"' ]
+  sink:
+    - opensearch:
+        hosts: [ "https://10.0.2.72:9200" ]
+        insecure: true
+        username: "admin"
+        password: "Cegthg@hjkm1"
+        index: "fluent"

@@ -1,0 +1,24 @@
+[SERVICE]
+    flush        1
+    daemon       Off
+    log_level    info
+    parsers_file parsers.conf
+    plugins_file plugins.conf
+    http_server  Off
+    http_listen  0.0.0.0
+    http_port    2020
+    storage.metrics on
+[INPUT]
+
+    Name                  tail
+    Refresh_interval      5
+    Path                  /var/log/nginx/*.log,var/log/mysql/*.log
+    Read_from_head        false
+
+[OUTPUT]
+    Name http
+    Match *
+    Host 10.0.2.72
+    Port 2021
+    URI /log/ingest
+    Format json
